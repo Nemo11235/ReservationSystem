@@ -1,19 +1,31 @@
-package cs151hw1;
 
 import java.io.InputStream;
 import java.util.Scanner; 
+
+/**
+ * Description: This is a program that simulates the reservation system for a plane. Users will be
+ *  able to reserve or cancel seats for individual or groups, print the available seats, and print
+ *   the occupied seats. There are economy class seats and first class seats, and when user is trying
+ *    to reserve for an individual, he can pick the seat preference, like window seat, aisle seat,
+ *     or center seat.
+ * 
+ * @author Zhexian Liu
+ * @version 1.0
+ * @assignment  CS151 Assignment 1
+ */
 
 public class main {
 	
 	public static void main(String[] args) {
 		
-		seat s = new seat();
+		Seat s = new Seat();
 		
 		/*prompt the user to choose an action by entering corresponding input character*/
 		System.out.println("Welcome to the reservation systrem! Please choose your action: \nAdd [P]assenger, Add [G]roup, [C]ancel Reservations, Print Seating [A]vailability Chart, "
 				+ "Print [M]anifest, [Q]uit");
 		
 		Scanner scan = new Scanner(System.in);
+		
 		char choice = scan.next().charAt(0); 
 		
 		
@@ -57,6 +69,8 @@ public class main {
 					+ "Print [M]anifest, [Q]uit");
 			choice = scan.next().charAt(0); 
 		}
+		
+		// s.save();
 		
 		System.out.println("Thanks for using the reservation system! Bye!");
 	}
