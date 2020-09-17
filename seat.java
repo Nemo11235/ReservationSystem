@@ -15,8 +15,7 @@ import java.io.FileWriter;
  *
  */
 public class Seat {
-	Scanner scan = new Scanner(System.in);
-	
+	String filename;
 	Passenger [][] e = new Passenger[10][6];
 	Passenger [][] f = new Passenger[2][4];
 	
@@ -28,8 +27,9 @@ public class Seat {
 	 * 
 	 * @return none.
 	 */
-	public Seat()
+	public Seat(String file)
 	{
+		filename = file;
 		for(int r = 0; r < e.length; r++)
 		{
 			for(int c = 0; c < e[r].length; c++)
@@ -56,13 +56,14 @@ public class Seat {
 	 * @param pref - char that holds the seat preference of the passenger
 	 * @return none
 	 */
-	public void add_one() 
+	public void add_one(Scanner scan) 
 	{
 		// declare variables and prompt user for info of one passenger
 		String name;
 		int service;
 		char pref;
 		System.out.print("Name: ");
+		scan.nextLine();
 		name = scan.nextLine();
 		
 		System.out.print("Service Class: ");
@@ -89,7 +90,7 @@ public class Seat {
 						if ((c == 0 || c == 5) && (e[r][c].getName() == "N/A"))
 						{
 							e[r][c] = temp;
-							System.out.println("Seat reserved successfully, your seat is: "  + (r+10)+ (char)(c+65));
+							System.out.println("Seat reserved successfully, " + temp.name + " has been assigned to seat "  + (r+10)+ (char)(c+65));
 							return;
 						}
 					}
@@ -107,7 +108,7 @@ public class Seat {
 						if ((c == 1 || c == 4) && (e[r][c].getName() == "N/A"))
 						{
 							e[r][c] = temp;
-							System.out.println("Seat reserved successfully, your seat is: " + (r+10) + (char)(c+65));
+							System.out.println("Seat reserved successfully, " + temp.name + " has been assigned to seat " + (r+10) + (char)(c+65));
 							return;
 						}
 					}
@@ -124,7 +125,7 @@ public class Seat {
 						if ((c == 2 || c == 3) && (e[r][c].getName() == "N/A"))
 						{
 							e[r][c] = temp;
-							System.out.println("Seat reserved successfully, your seat is: " + (r+10) + (char)(c+65));
+							System.out.println("Seat reserved successfully, " + temp.name + " has been assigned to seat " + (r+10) + (char)(c+65));
 							return;
 						}
 					}
@@ -144,7 +145,7 @@ public class Seat {
 						if ((c == 0 || c == 3) && (f[r][c].getName() == "N/A"))
 						{
 							f[r][c] = temp;
-							System.out.println("Seat reserved successfully, your seat is: " + (r+1) + (char)(c+65));
+							System.out.println("Seat reserved successfully, " + temp.name + " has been assigned to seat " + (r+1) + (char)(c+65));
 							return;
 						}
 					}
@@ -161,7 +162,7 @@ public class Seat {
 						if ((c == 1 || c == 2) && (f[r][c].getName() == "N/A"))
 						{
 							f[r][c] = temp;
-							System.out.println("Seat reserved successfully, your seat is: " + (r+1) + (char)(c+65));
+							System.out.println("Seat reserved successfully, " + temp.name + " has been assigned to seat " + (r+1) + (char)(c+65));
 							return;
 						}
 					}
@@ -192,11 +193,12 @@ public class Seat {
 	 *  @param p - passenger object that will holds the info of a passenger in a group that is going into the seat;
 	 *  @return none.
 	 */
-	public void add_group()
+	public void add_group(Scanner scan)
 	{
 		int service;
 		
 		System.out.print("Group Name: ");
+		scan.nextLine();
 		String group = scan.nextLine();
 		System.out.print("Names: ");
 		String nameList = scan.nextLine();
@@ -270,8 +272,10 @@ public class Seat {
 					{
 						if(e[i][j].getName() == "N/A" && iter.hasNext()) 
 						{
-							Passenger p = new Passenger(iter.next(), service, group);
+							String temp = iter.next();
+							Passenger p = new Passenger(temp, service, group);
 							e[i][j] = p;
+							System.out.println(temp + " has been assigned to seat " + (i+10) + (char)(j+65));
 						}
 					}
 					return;
@@ -286,8 +290,10 @@ public class Seat {
 					{
 						if(e[order[i]][j].getName() == "N/A" && iter.hasNext()) 
 						{
-								Passenger p = new Passenger(iter.next(), service, group);
-								e[order[i]][j] = p;
+							String temp = iter.next();
+							Passenger p = new Passenger(temp, service, group);
+							e[order[i]][j] = p;
+							System.out.println(temp + " has been assigned to seat " + (i+10) + (char)(j+65));
 						}
 					}
 				}
@@ -297,10 +303,8 @@ public class Seat {
 		}
 		else // start of trying to put group into first class -------------------------------------------------------------------
 		{
-			System.out.println("Adding stuff for first class");
 			int[] adjacent = new int[f.length];
 			int max, cur;
-			int index = 0;
 			for(int r = 0; r < f.length; r++)
 			{
 				max = 0;
@@ -330,8 +334,10 @@ public class Seat {
 					{
 						if(f[i][j].getName() == "N/A" && iter.hasNext()) 
 						{
-							Passenger p = new Passenger(iter.next(), service, group);
+							String temp = iter.next();
+							Passenger p = new Passenger(temp, service, group);
 							f[i][j] = p;
+							System.out.println(temp + " has been assigned to seat " + (i+1) + (char)(j+65));
 						}
 					}
 					return;
@@ -340,23 +346,27 @@ public class Seat {
 			if(fit) return; // exit the function if all the group member has been assigned to one row.
 			else // if can't fit into one row, put them in the rows that has the largest adjacent seats
 			{
-							for(int i = 0; i < order.length; i++)
-							{
-								for(int j = 0; j < f[order[i]].length; j++)
-								{
-									if(f[order[i]][j].getName() == "N/A" && iter.hasNext()) 
-									{
-											Passenger p = new Passenger(iter.next(), service, group);
-											f[order[i]][j] = p;
-									}
-								}
-							}
+				for(int i = 0; i < order.length; i++)
+				{
+					for(int j = 0; j < f[order[i]].length; j++)
+					{
+						if(f[order[i]][j].getName() == "N/A" && iter.hasNext()) 
+						{
+							String temp = iter.next();
+								Passenger p = new Passenger(temp, service, group);
+								f[order[i]][j] = p;
+								System.out.println(temp + " has been assigned to seat " + (i+1) + (char)(j+65));
 						}
+					}
+				}
+			}
 						// end of putting group into economy class seats
-						return;
+			return;
 		}
 		
 	}
+	
+	
 	/**
 	 * Description: This function will use bubble sort the given array by ascending order, then apply the same switches
 	 * to an array with the same length but contains number correspond to the index.
@@ -518,6 +528,8 @@ public class Seat {
 			for(int c = 0; c < e[r].length; c++)
 			{
 				if(e[r][c].getName().equals(name)) e[r][c] = fill;
+				System.out.println("Passenger " + name + "'s reservation has been canceled");
+				return;
 			}
 		}
 		
@@ -526,23 +538,29 @@ public class Seat {
 			for(int c = 0; c < f[r].length; c++)
 			{
 				if(f[r][c].getName().equals(name)) f[r][c] = fill;
+				System.out.println("Passenger " + name + "'s reservation has been canceled");
+				return;
 			}
 		}
+		System.out.println("Passenger name was not found.");
 	}
 	
 	/**
 	 * Description: Function that cancels all the members in a group
 	 * 
 	 * @param name - name of the group that the user wants to cancel;
+	 * @param canceled - booleans that changes to true of a group has been canceled
 	 * @return none;
 	 */
 	public void cancel_group(String name)
 	{
+		Boolean canceled = false;
 		for(int r = 0; r < e.length; r++)
 		{
 			for(int c = 0; c < e[r].length; c++)
 			{
 				if(e[r][c].getGroup().equals(name)) e[r][c] = fill;
+				canceled = true;
 			}
 		}
 		
@@ -551,8 +569,13 @@ public class Seat {
 			for(int c = 0; c < f[r].length; c++)
 			{
 				if(f[r][c].getGroup().equals(name)) f[r][c] = fill;
+				canceled = true;
 			}
 		}
+		if(canceled)
+			System.out.println("All members of group " + name + " has been canceled " );
+		else
+			System.out.println("The group doesn't exist.");
 	}
 	
 	
@@ -560,7 +583,7 @@ public class Seat {
 	 * Description: Function that reads the data from previous run. If file was not initiated yet, 
 	 * this function will create one.
 	 * 
-	 * @param CL34 - file object; 
+	 * @param filename - file object; 
 	 * @param title - title of the file;
 	 * @param data - one line of data;
 	 * @return none.
@@ -569,19 +592,19 @@ public class Seat {
 	{
 		try 
 		{
-			File CL34 = new File("CL34.txt");
-			Scanner scan = new Scanner(CL34);
-			String title = scan.nextLine();
-			while(scan.hasNextLine())
+			File FN = new File(filename + ".txt");
+			Scanner sc = new Scanner(FN);
+			String title = sc.nextLine();
+			while(sc.hasNextLine())
 			{
-				String data = scan.nextLine();
+				String data = sc.nextLine();
 				addFromFile(getInfo(data));
 			}
-			scan.close();
+			sc.close();
 		}
 		catch (FileNotFoundException e)
 		{
-			System.out.println("File CL34 not found.");
+			System.out.println("File not found.");
 			makeFile();
 		}
 	}
@@ -603,7 +626,7 @@ public class Seat {
 	 * Description: This function will get the corresponding info of a passenger in each line
 	 * of the data file
 	 * 
-	 * @param str - one line in CL34 data file
+	 * @param str - one line in data file
 	 * @param row - number of row
 	 * @param col - character of column 
 	 * @param group - name of the group
@@ -664,7 +687,7 @@ public class Seat {
 	}
 	
 	/**
-	 * Description: This function will create a new file names CL34 with an initiate line
+	 * Description: This function will create a new file with an initiate line
 	 * 
 	 * @param file - file to read
 	 * @param myWriter - FileWriter object that reads the file
@@ -674,11 +697,11 @@ public class Seat {
 	{
 		try 
 		{
-			File file = new File("CL34.txt");
+			File file = new File(filename + ".txt");
 			if(file.createNewFile())
 			{
-				FileWriter myWriter = new FileWriter("CL34.txt");
-				System.out.println("CL34 doesn't exist, empty CL34.txt file created successfully.");
+				FileWriter myWriter = new FileWriter(filename + ".txt");
+				System.out.println("File doesn't exist, empty " + filename + ".txt file created successfully.");
 				myWriter.write("First 1-2, Left: A-B, Right: C-D; Economy 10-29, Left: A-C, Right: D-F\n");
 				myWriter.close();
 			}
@@ -694,4 +717,63 @@ public class Seat {
 		}
 	}
 	
+	/**
+	 * Description: This function will save the data to the file after the program quits. It should create
+	 * one if there's no file exist.
+	 * 
+	 * @param file - file object
+	 * @param myWriter - FileWriter object
+	 * @return none.
+	 */
+	public void save()
+	{
+		try 
+		{
+			File file = new File(filename + ".txt");
+			if(!file.createNewFile())
+			{
+				FileWriter myWriter = new FileWriter(filename + ".txt");
+				myWriter.write("First 1-2, Left: A-B, Right: C-D; Economy 10-29, Left: A-C, Right: D-F\n");
+				for(int i = 0; i < f.length; i++)
+				{
+					for(int j = 0; j < f[i].length; j++)
+					{
+						if(!f[i][j].getName().equals("N/A"))
+						{
+							if(f[i][j].getGroup() == "N/A")
+								myWriter.write(Integer.toString(i+1) + (char)(j+65) + ", I, " + f[i][j].getName() + "\n");
+							else
+								myWriter.write(Integer.toString(i+1) + (char)(j+65) + ", G, " + f[i][j].getGroup() + ", " + f[i][j].getName() + "\n");
+					
+						}
+					}
+				}
+				
+				for(int i = 0; i < e.length; i++)
+				{
+					for(int j = 0; j < e[i].length; j++)
+					{
+						if(!e[i][j].getName().equals("N/A"))
+						{
+							if(e[i][j].getGroup() == "N/A")
+								myWriter.write(Integer.toString(i+10) + (char)(j+65) + ", I, " + e[i][j].getName() + "\n");
+							else
+								myWriter.write(Integer.toString(i+10) + (char)(j+65) + ", G, " + e[i][j].getGroup() + ", " + e[i][j].getName() + "\n");
+					
+						}
+					}
+				}
+				myWriter.close();
+			}
+			else
+			{
+				System.out.println("File already exists.");
+			}
+		}
+		catch(IOException e)
+		{
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+	}
 }
