@@ -1,4 +1,3 @@
-
 import java.io.InputStream;
 import java.util.Scanner; 
 
@@ -14,11 +13,11 @@ import java.util.Scanner;
  * @assignment  CS151 Assignment 1
  */
 
-public class main {
+public class ReservationSystem {
 	
 	public static void main(String[] args) {
 		
-		Seat s = new Seat();
+		Seat s = new Seat(args[0]);
 		
 		/*prompt the user to choose an action by entering corresponding input character*/
 		System.out.println("Welcome to the reservation systrem! Please choose your action: \nAdd [P]assenger, Add [G]roup, [C]ancel Reservations, Print Seating [A]vailability Chart, "
@@ -33,11 +32,11 @@ public class main {
 		{
 			if(choice == 'P')
 			{
-				s.add_one();
+				s.add_one(scan);
 			}
 			else if(choice == 'G')
 			{
-				s.add_group();
+				s.add_group(scan);
 			}
 			else if(choice == 'C')
 			{
@@ -70,9 +69,10 @@ public class main {
 			choice = scan.next().charAt(0); 
 		}
 		
-		// s.save();
+		s.save();
 		
 		System.out.println("Thanks for using the reservation system! Bye!");
+		scan.close();
 	}
 
 }
